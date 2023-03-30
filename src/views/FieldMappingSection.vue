@@ -16,6 +16,10 @@ export default {
     LTileLayer,
     LMarker
   },
+  props: {
+    value: [Object],
+  },
+
   data () {
     return {
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -25,6 +29,16 @@ export default {
       center: [51.505, -0.159],
       markerLatLng: null
     };
+  },
+
+  watch: {
+    value: {
+      immediate: true,
+      handler(to) {
+        this.markerLatLng = to;
+        },
+    },
+    markerLatLng(to) { this.$emit('input', to); }
   },
   methods: {
     addMarker(e) {

@@ -1,10 +1,14 @@
 <template>
   <div id="app">
+    <v-app :style="{background: '#F5F5F5'}">
+
     <nav>
       <router-link to="/">Home</router-link> |
       <router-link to="/create-field">Create Field</router-link>
     </nav>
     <router-view/>
+
+    </v-app>
   </div>
 </template>
 

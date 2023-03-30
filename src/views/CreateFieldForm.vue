@@ -1,81 +1,99 @@
 <template>
-  <v-form
-      ref="form"
-      v-model="valid"
-      lazy-validation
-  >
+  <div>
+    count: {{fields}}
     <v-text-field
-        v-model="name"
+        v-model="formFields.name"
         :counter="10"
-        :rules="nameRules"
+        :rules="requiredValidation"
         label="Name"
         required
     ></v-text-field>
 
-    <v-text-field
-        v-model="email"
-        :rules="emailRules"
-        label="primary crop"
-        required
-    ></v-text-field>
-
     <v-select
-        v-model="select"
-        :items="items"
+        v-model="formFields.primaryCrop"
+        :items="cropOptions"
         :rules="[v => !!v || 'Item is required']"
-        label="Item"
+        label="Primary Crop"
+        item-text="crop"
+        return-object
         required
     ></v-select>
 
+    <v-select
+        v-model="formFields.otherCrops"
+        :items="cropOptions"
+        :rules="[v => !!v || 'Item is required']"
+        label="Other Crops"
+        required
+        item-text="crop"
+        return-object
+        multiple
+    ></v-select>
     <v-btn
-        :disabled="!valid"
-        color="success"
-        class="mr-4"
-        @click="validate"
+        depressed
+        color="primary"
     >
-      Validate
+      Primary
     </v-btn>
-
-    <v-btn
-        color="error"
-        class="mr-4"
-        @click="reset"
-    >
-      Reset Form
-    </v-btn>
-
-    <v-btn
-        color="warning"
-        @click="resetValidation"
-    >
-      Reset Validation
-    </v-btn>
-  </v-form>
+  </div>
 </template>
 <script>
-export default {
-  data: () => ({
-    valid: true,
-    name: '',
-    nameRules: [
-      v => !!v || 'Name is required',
-      v => (v && v.length <= 10) || 'Name must be less than 10 characters',
-    ],
-    email: '',
-    emailRules: [
-      v => !!v || 'E-mail is required',
-      v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-    ],
-    select: null,
-    items: [
-      'Item 1',
-      'Item 2',
-      'Item 3',
-      'Item 4',
-    ],
-    checkbox: false,
-  }),
+import {store} from "@/store";
 
+export default {
+  props: {
+    value: [Object],
+  },
+
+  data: () => ({
+    requiredValidation: [v => !!v || 'Name is required',],
+    cropOptions: [
+      {
+        crop: 'Beetroot',
+        yield: {
+          conservative: 14,
+          likely: 18,
+          target: 25,
+        }
+      },
+      {
+        crop: 'Broccoli',
+        yield: {
+          conservative: 5,
+          likely: 8,
+          target: 12,
+        }
+      },
+    ],
+    formFields: {
+      name: null,
+      primaryCrop: null,
+      otherCrops: [],
+
+    },
+  }),
+  computed: {
+    fields() {
+      return store.state.fields
+    }
+  },
+  watch: {
+    value: {
+      immediate: true,
+      handler(to) {
+        if(to) {
+          this.formFields = to;
+        }
+      },
+    },
+
+    formFields:{
+      deep: true,
+      handler(to) {
+        this.$emit('input', to);
+      },
+    },
+  },
   methods: {
     validate () {
       this.$refs.form.validate()
