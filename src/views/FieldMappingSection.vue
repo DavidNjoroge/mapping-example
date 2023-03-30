@@ -48,16 +48,16 @@ export default {
           this.markerLatLng = null;
           this.polygonLatLngs = null;
         }
-      },
+      }
     },
     markerLatLng(to) {
-      this.$emit('update:value', {
+      this.$emit('input', {
         marker: to,
         polygon: this.polygonLatLngs
       });
     },
     polygonLatLngs(to) {
-      this.$emit('update:value', {
+      this.$emit('input', {
         marker: this.markerLatLng,
         polygon: to
       });
