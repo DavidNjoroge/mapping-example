@@ -1,6 +1,6 @@
 <template>
   <div>
-    <l-map style="height: 300px" :zoom="zoom" :center="center" @click="onMapClick">
+    <l-map style="height: 60vh; width: 80vw" :zoom="zoom" :center="center" @click="onMapClick">
       <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
       <l-marker v-if="markerLatLng" :lat-lng="markerLatLng"></l-marker>
       <l-polygon v-if="polygonLatLngs" :lat-lngs="polygonLatLngs"></l-polygon>

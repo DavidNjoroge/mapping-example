@@ -17,7 +17,9 @@
       </v-list-item>
     </v-list>
 
-    <AllFieldsMapSection />
+<!--    <AllFieldsMapSection />-->
+
+    <ShowCombinedMap :allLocations="allFieldLocations" />
   </div>
 </template>
 
@@ -25,17 +27,20 @@
 // @ is an alias to /src
 
 import {store} from "@/store";
-import AllFieldsMapSection from "@/views/AllFieldsMapSection.vue";
+import ShowCombinedMap from "@/views/home/ShowCombinedMap.vue";
 
 export default {
   name: 'HomeView',
   components: {
-    AllFieldsMapSection
+    ShowCombinedMap,
   },
   computed: {
     fields() {
       return store.state.fields
     },
+    allFieldLocations () {
+      return this.fields.map(f => f.fieldLocation)
+    }
   },
 }
 </script>
