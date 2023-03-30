@@ -48,6 +48,14 @@
         >
           Reset Validation
         </v-btn>
+
+        <v-btn
+            color="primary"
+            :disabled="!fieldsValid"
+            @click="saveField"
+        >
+          Save field
+        </v-btn>
       </div>
 
     </div>
@@ -58,32 +66,28 @@
 <script>
 import FieldMappingSection from "@/views/FieldMappingSection.vue";
 import CreateFieldForm from "@/views/CreateFieldForm.vue";
-
+import {store} from "@/store";
+import { v4 as uuidv4 } from "uuid";
 export default {
   components: {
     CreateFieldForm,
     FieldMappingSection
   },
 
-  props: {
-    value: Boolean,
-    required: Boolean,
-  },
-
   data: () => ({
     formValid: false,
+    fieldUuid: uuidv4(),
     form: null,
     fieldLocation: null
   }),
-
-  watch: {
-    value: {
-      immediate: true,
-      handler(to) { this.hash = to; }
+  computed: {
+    fields() {
+      return store.state.fields
     },
-    hash(to) { this.$emit('input', to); },
+    fieldsValid() {
+      return this.formValid && this.fieldLocation
+    }
   },
-
   methods: {
     validate () {
       this.$refs.form.validate()
@@ -96,6 +100,10 @@ export default {
     },
 
     saveField() {
+      const form = {...this.form,uuid: this.fieldUuid, fieldLocation: this.fieldLocation}
+      console.log('saveField', form)
+      store.commit('addField', form)
+      this.$router.push({name: 'home'});
 
     }
   }
